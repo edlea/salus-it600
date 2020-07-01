@@ -1,0 +1,16 @@
+{
+  "name": "salus-it600",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bent": "^7.3.7",
+    "fast-xml-parser": "^3.17.4",
+    "md5": "^2.2.1"
+  }
+}
