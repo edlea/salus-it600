@@ -23,7 +23,7 @@ salus.devices().then(console.log);
 
 ## Limitations
 
-This library is provided "as-is" with limited testing. Currently only thermostats connected to under-floor heating, using centigrade (i.e. not fahrenheit) have been tested.
+This library is provided "as-is" with limited testing. Currently only thermostats connected to under-floor heating, using Celsius (i.e. not Fahrenheit) have been tested.
 
 ## Methods
 
