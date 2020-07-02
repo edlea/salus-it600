@@ -25,12 +25,29 @@ const MODES = [
     "AWAY",
     "FROST",
     "ON",
+    "ON",
+    "UNDEFINED",
+    "UNDEFINED",
+    "UNDEFINED",
+    "OFFLINE",
+    "AUTO_HIGH",
+    "AUTO_MEDIUM",
+    "AUTO_LOW",
+    "HIGH",
+    "MEDIUM",
+    "LOW",
+    "PARTY",
+    "AWAY",
+    "FROST",
+    "ON",
 ];
 
+// $1JJ (HIGH_AUTO+ACTIVE, 21, 21)
 const summaryToValues = (summary) => ({
     current: (summary.charCodeAt(2) - 32) * 0.5,
     target: (summary.charCodeAt(3) - 32) * 0.5,
     mode: MODES[summary.charCodeAt(1) - 32],
+    heating: summary.charCodeAt(1) - 32 > 9
 });
 
 class Salus {
@@ -71,7 +88,8 @@ class Salus {
 
     async _request({
         method,
-        parameters
+        parameters,
+        _retry = false
     }) {
         if (!this.session) await this.login();
         const request = `${method}?${this._baseParameters()}&${parameters}`;
@@ -81,12 +99,15 @@ class Salus {
                 ignoreNameSpace: true
             });
         } catch (e) {
-            // Do it again, once, to avoid an infinite loop
-            if (!this.session) await this.login();
-            const response = await get(request);
-            return xml.parse(response, {
-                ignoreNameSpace: true
-            });
+            // Do it again, once to avoid an infinite loop
+            if (e.statusCode == 500 && _retry == false) {
+                await this.login();
+                return await this._request({
+                    method,
+                    parameters,
+                    _retry: true
+                });
+            }
         }
     }
 
@@ -97,7 +118,6 @@ class Salus {
         });
         const deviceAttributes =
             response.getDeviceAttributesWithValuesResponse.attrList;
-
         const namesAttribute = deviceAttributes.find(
             (attribute) => attribute.id == ATTRIBUTES["NAME"]
         );
@@ -119,13 +139,16 @@ class Salus {
                     summary.find((s) => s.id == n.substring(0, 4)).value
                 ),
             }));
+
         return devices;
     }
 
+    // KITCHEN to 18 -> %21f2d0D
     async setTarget({
         id,
         temperature
     }) {
+        if (!id || !temperature) throw new Error('Both id and temperature named arguments must be set');
         const value = `!${id}${String.fromCharCode(temperature * 2 + 32)}`;
         console.log(value);
         const result = await this._request({
@@ -140,6 +163,9 @@ class Salus {
         mode,
         duration
     }) {
+        const MODES = ["AUTO", "HIGH", "MEDIUM", "LOW", "PARTY", "AWAY", "FROST"];
+        if (!id || !mode) throw new Error('Both id and mode named arguments must be set');
+        if (!MODES.includes(mode)) throw new Error(`Unknown mode: ${mode}`);
         /*
             35 - # - AUTO
             36 - $ - HIGH
@@ -149,7 +175,6 @@ class Salus {
             40 - ( - AWAY (followed by zeropadded number of days)
             41 - ) - FROST
           */
-        const MODES = ["AUTO", "HIGH", "MEDIUM", "LOW", "PARTY", "AWAY", "FROST"];
         const value = `!${id}${String.fromCharCode(MODES.indexOf(mode) + 35)}${
       duration ? duration.toString().padStart(2, "0") : ""
     }`;
