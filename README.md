@@ -25,6 +25,8 @@ salus.devices().then(console.log);
 
 This library is provided "as-is" with limited testing. Currently only thermostats connected to under-floor heating, using Celsius (i.e. not Fahrenheit) have been tested.
 
+Salus iT600 is also marketed by John Guest, in the UK, as JG Aura.
+
 ## Methods
 
 ### devices
