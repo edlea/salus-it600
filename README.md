@@ -38,14 +38,14 @@ await salus.devices();
 #### Return
 
 ```js
-{
+[{
     id: 'a0b1',
     name: 'Given Room Name',
     current: 18,
     target: 21,
     mode: 'AUTO_HIGH',
     heating: true
-}
+}, ... ]
 ```
 
 ### setTarget
