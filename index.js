@@ -139,7 +139,6 @@ class Salus {
     if (!id || !temperature)
       throw new Error("Both id and temperature named arguments must be set");
     const value = `!${id}${String.fromCharCode(temperature * 2 + 32)}`;
-    console.log(value);
     const result = await this._request({
       method: "setMultiDeviceAttributes2",
       parameters: `name1=B06&value1=${encodeURIComponent(value)}`,
@@ -164,7 +163,6 @@ class Salus {
     const value = `!${id}${String.fromCharCode(MODES.indexOf(mode) + 35)}${
       duration ? duration.toString().padStart(2, "0") : ""
     }`;
-    console.log(value);
     const result = await this._request({
       method: "setMultiDeviceAttributes2",
       parameters: `name1=B05&value1=${encodeURIComponent(value)}`,
