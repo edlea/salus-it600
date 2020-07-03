@@ -50,10 +50,7 @@ const summaryToValues = (summary) => ({
 });
 
 class Salus {
-  constructor({
-    username,
-    password
-  }) {
+  constructor({ username, password }) {
     this.username = username;
     this.password = password;
   }
@@ -85,11 +82,7 @@ class Salus {
     }&devId=${this.device.devId}&timestamp=${new Date().getTime()}`;
   }
 
-  async _request({
-    method,
-    parameters,
-    _retry = false
-  }) {
+  async _request({ method, parameters, _retry = false }) {
     if (!this.session) await this.login();
     const request = `${method}?${this._baseParameters()}&${parameters}`;
     try {
@@ -121,13 +114,18 @@ class Salus {
       (attribute) => attribute.id == ATTRIBUTES["NAME"]
     );
     const summary = deviceAttributes
-      .find((attribute) => attribute.id == ATTRIBUTES["SUMMARY"]).replace(/&amp;/g, '&');
-    .value.match(/.{1,8}/g)
+      .find((attribute) => attribute.id == ATTRIBUTES["SUMMARY"])
+      .value.replace(/&amp;/g, "&")
+      .match(/.{1,8}/g)
       .map((a) => ({
         id: a.substring(0, 4),
         value: a.substring(4),
       }));
-
+    console.log(
+      deviceAttributes
+        .find((attribute) => attribute.id == ATTRIBUTES["SUMMARY"])
+        .value.replace(/&amp;/g, "&")
+    );
     const devices = namesAttribute.value
       .replace(/,$/, "")
       .split(",")
@@ -142,10 +140,7 @@ class Salus {
     return devices;
   }
 
-  async setTarget({
-    id,
-    temperature
-  }) {
+  async setTarget({ id, temperature }) {
     if (!id || !temperature)
       throw new Error("Both id and temperature named arguments must be set");
     const value = `!${id}${String.fromCharCode(temperature * 2 + 32)}`;
@@ -156,11 +151,7 @@ class Salus {
     return result;
   }
 
-  async setMode({
-    id,
-    mode,
-    duration
-  }) {
+  async setMode({ id, mode, duration }) {
     const MODES = ["AUTO", "HIGH", "MEDIUM", "LOW", "PARTY", "AWAY", "FROST"];
     if (!id || !mode)
       throw new Error("Both id and mode named arguments must be set");
