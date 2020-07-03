@@ -121,11 +121,6 @@ class Salus {
         id: a.substring(0, 4),
         value: a.substring(4),
       }));
-    console.log(
-      deviceAttributes
-        .find((attribute) => attribute.id == ATTRIBUTES["SUMMARY"])
-        .value.replace(/&amp;/g, "&")
-    );
     const devices = namesAttribute.value
       .replace(/,$/, "")
       .split(",")
