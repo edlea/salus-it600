@@ -29,6 +29,7 @@ const MODES = [
   "UNDEFINED",
   "UNDEFINED",
   "UNDEFINED",
+  "UNDEFINED",
   "OFFLINE",
   "AUTO_HIGH",
   "AUTO_MEDIUM",
