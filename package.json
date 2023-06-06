@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "bent": "^7.3.7",
-    "fast-xml-parser": "^3.17.4",
+    "fast-xml-parser": "^4.2.4",
     "md5": "^2.2.1"
   }
 }
